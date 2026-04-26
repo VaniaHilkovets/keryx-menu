@@ -35,11 +35,11 @@ Menu:
 Keryx menu
 1. Install node
 2. Install miner
-3. Update node and miner
+3. Status
 4. Start node and miner
 5. Stop node and miner
 6. Show logs
-7. Status
+7. Update node and miner
 8. Exit
 ```
 

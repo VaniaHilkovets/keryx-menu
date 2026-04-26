@@ -317,11 +317,11 @@ main_menu() {
 Keryx menu
 1. Install node
 2. Install miner
-3. Update node and miner
+3. Status
 4. Start node and miner
 5. Stop node and miner
 6. Show logs
-7. Status
+7. Update node and miner
 8. Exit
 MENU
     printf "Choose: "
@@ -329,11 +329,11 @@ MENU
     case "$choice" in
       1) install_node ;;
       2) install_miner ;;
-      3) update_node_and_miner ;;
+      3) show_status ;;
       4) start_node_and_miner ;;
       5) stop_node_and_miner ;;
       6) show_logs ;;
-      7) show_status ;;
+      7) update_node_and_miner ;;
       8) exit 0 ;;
       *) echo "Unknown choice." ;;
     esac
