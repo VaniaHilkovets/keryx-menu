@@ -70,30 +70,6 @@ get_wallet() {
   printf "%s\n" "$wallet"
 }
 
-change_wallet() {
-  require_root
-  ensure_dirs
-  echo
-  if [ -s "$WALLET_FILE" ]; then
-    printf "Current wallet: "
-    cat "$WALLET_FILE"
-  fi
-  while true; do
-    printf "New Keryx mining address: "
-    read -r wallet
-    if [ -n "$wallet" ]; then
-      break
-    fi
-    echo "Wallet address cannot be empty."
-  done
-  printf "%s\n" "$wallet" > "$WALLET_FILE"
-  chmod 600 "$WALLET_FILE"
-  echo "Wallet saved to $WALLET_FILE"
-  if tmux has-session -t keryx-miner 2>/dev/null; then
-    echo "Miner is already running. Restart it manually to use the new wallet."
-  fi
-}
-
 clone_or_update() {
   local repo="$1"
   local dst="$2"
@@ -275,8 +251,7 @@ Keryx menu
 3. Start node and miner
 4. Show logs
 5. Status
-6. Set wallet
-7. Exit
+6. Exit
 MENU
     printf "Choose: "
     read -r choice
@@ -286,8 +261,7 @@ MENU
       3) start_node_and_miner ;;
       4) show_logs ;;
       5) show_status ;;
-      6) change_wallet ;;
-      7) exit 0 ;;
+      6) exit 0 ;;
       *) echo "Unknown choice." ;;
     esac
   done

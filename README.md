@@ -36,17 +36,16 @@ Keryx menu
 3. Start node and miner
 4. Show logs
 5. Status
-6. Set wallet
-7. Exit
+6. Exit
 ```
 
-On the first miner start, the script asks for the Keryx mining address and saves it to:
+On the first `Start node and miner`, the script asks for the Keryx mining address and saves it to:
 
 ```text
 /opt/keryx/wallet.txt
 ```
 
-Use `Set wallet` to change the saved address later. Restart the miner after changing the wallet.
+To change the saved address later, edit `/opt/keryx/wallet.txt` before starting the miner again.
 
 ## tmux Sessions
 
