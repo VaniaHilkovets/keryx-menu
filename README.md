@@ -21,10 +21,10 @@ Simple bash menu for installing and running a Keryx node and miner on a Linux GP
 
 ## Usage
 
-Copy the script to the server and run it as root:
+Run this on the Linux GPU server as root:
 
 ```bash
-bash /root/keryx_menu.sh
+curl -fsSL https://raw.githubusercontent.com/VaniaHilkovets/keryx-menu/main/keryx_menu.sh -o /root/keryx_menu.sh && chmod +x /root/keryx_menu.sh && bash /root/keryx_menu.sh
 ```
 
 Menu:
