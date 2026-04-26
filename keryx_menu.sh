@@ -245,70 +245,6 @@ show_logs() {
   tail -F "$RUNNER_LOGDIR/node.log" "$NODE_LOGDIR/keryx.log" "$RUNNER_LOGDIR/miner.log"
 }
 
-show_status() {
-  require_root
-  ensure_dirs
-  shopt -s nullglob
-
-  echo
-  echo "Keryx status"
-  echo "------------"
-
-  if tmux has-session -t keryx-node 2>/dev/null; then
-    echo "Node tmux:   running (keryx-node)"
-  else
-    echo "Node tmux:   not running"
-  fi
-
-  if pgrep -x keryxd >/dev/null 2>&1; then
-    echo "Node proc:   running"
-  else
-    echo "Node proc:   not running"
-  fi
-
-  if tmux has-session -t keryx-miner 2>/dev/null; then
-    echo "Miner tmux:  running (keryx-miner)"
-  else
-    echo "Miner tmux:  not running"
-  fi
-
-  if pgrep -x keryx-miner >/dev/null 2>&1; then
-    echo "Miner proc:  running"
-  else
-    echo "Miner proc:  not running"
-  fi
-
-  echo
-  echo "Sync:"
-  local sync_line
-  local node_logs=("$RUNNER_LOGDIR"/node.log "$NODE_LOGDIR"/*.log)
-  sync_line="$(grep -hEi 'IBD|sync|Processed [0-9]+ (blocks|headers)' "${node_logs[@]}" 2>/dev/null | tail -n 1)"
-  if [ -n "$sync_line" ]; then
-    echo "$sync_line"
-  else
-    echo "No sync info found yet. Node logs checked:"
-    printf "  %s\n" "${node_logs[@]}"
-  fi
-
-  echo
-  echo "Last miner line:"
-  local miner_line
-  local miner_logs=("$RUNNER_LOGDIR"/miner.log)
-  miner_line="$(tail -n 300 "${miner_logs[@]}" 2>/dev/null | grep -Ei 'hash/s|Spawned Thread|Workers stalled|Keryxd is not synced|Registered for new template|accepted|submitted|CUDA worker|Plugins found' | tail -n 1)"
-  if [ -n "$miner_line" ]; then
-    echo "$miner_line"
-  else
-    echo "No miner info found yet. Miner logs checked:"
-    printf "  %s\n" "${miner_logs[@]}"
-  fi
-
-  if command -v nvidia-smi >/dev/null 2>&1; then
-    echo
-    echo "GPU:"
-    nvidia-smi --query-gpu=index,name,utilization.gpu,memory.used,memory.total,power.draw --format=csv,noheader 2>/dev/null || true
-  fi
-}
-
 main_menu() {
   require_root
   while true; do
@@ -317,24 +253,22 @@ main_menu() {
 Keryx menu
 1. Install node
 2. Install miner
-3. Status
-4. Start node and miner
-5. Stop node and miner
-6. Show logs
-7. Update node and miner
-8. Exit
+3. Start node and miner
+4. Stop node and miner
+5. Show logs
+6. Update node and miner
+7. Exit
 MENU
     printf "Choose: "
     read -r choice
     case "$choice" in
       1) install_node ;;
       2) install_miner ;;
-      3) show_status ;;
-      4) start_node_and_miner ;;
-      5) stop_node_and_miner ;;
-      6) show_logs ;;
-      7) update_node_and_miner ;;
-      8) exit 0 ;;
+      3) start_node_and_miner ;;
+      4) stop_node_and_miner ;;
+      5) show_logs ;;
+      6) update_node_and_miner ;;
+      7) exit 0 ;;
       *) echo "Unknown choice." ;;
     esac
   done
