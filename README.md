@@ -49,6 +49,8 @@ Keryx menu
 /var/lib/keryx-node
 ```
 
+`Start node and miner` starts both tmux sessions and immediately opens combined logs. Press `Ctrl+C` to leave logs without stopping the node or miner.
+
 On the first `Start node and miner`, the script asks for the Keryx mining address and saves it to:
 
 ```text

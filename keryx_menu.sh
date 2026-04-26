@@ -201,6 +201,10 @@ start_node_and_miner() {
 
   start_node
   start_miner
+
+  echo
+  echo "Opening combined logs. Press Ctrl+C to leave logs; node and miner will keep running in tmux."
+  show_logs
 }
 
 stop_node_and_miner() {
