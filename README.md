@@ -8,6 +8,7 @@ Simple bash menu for installing and running a Keryx node and miner on a Linux GP
 - Install Keryx miner from source
 - Update node and miner without deleting node sync data
 - Start node and miner together
+- Stop node and miner cleanly
 - Run node and miner in separate tmux sessions
 - Show combined node and miner logs
 - Show node/miner process status, sync status, and GPU usage
@@ -36,9 +37,10 @@ Keryx menu
 2. Install miner
 3. Update node and miner
 4. Start node and miner
-5. Show logs
-6. Status
-7. Exit
+5. Stop node and miner
+6. Show logs
+7. Status
+8. Exit
 ```
 
 `Update node and miner` rebuilds the latest code and restarts the tmux sessions. It does not delete the node data directory:

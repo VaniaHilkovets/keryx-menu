@@ -205,11 +205,13 @@ start_node_and_miner() {
 
 stop_node_and_miner() {
   require_root
+  echo "Stopping Keryx node and miner..."
   tmux kill-session -t keryx-miner 2>/dev/null || true
   tmux kill-session -t keryx-node 2>/dev/null || true
   sleep 2
   pkill -x keryx-miner 2>/dev/null || true
   pkill -x keryxd 2>/dev/null || true
+  echo "Stopped Keryx node and miner."
 }
 
 update_node_and_miner() {
@@ -313,9 +315,10 @@ Keryx menu
 2. Install miner
 3. Update node and miner
 4. Start node and miner
-5. Show logs
-6. Status
-7. Exit
+5. Stop node and miner
+6. Show logs
+7. Status
+8. Exit
 MENU
     printf "Choose: "
     read -r choice
@@ -324,9 +327,10 @@ MENU
       2) install_miner ;;
       3) update_node_and_miner ;;
       4) start_node_and_miner ;;
-      5) show_logs ;;
-      6) show_status ;;
-      7) exit 0 ;;
+      5) stop_node_and_miner ;;
+      6) show_logs ;;
+      7) show_status ;;
+      8) exit 0 ;;
       *) echo "Unknown choice." ;;
     esac
   done
