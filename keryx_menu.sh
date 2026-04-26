@@ -100,6 +100,22 @@ install_node() {
   set +e
 }
 
+build_node_only() {
+  set -e
+  require_root
+  install_deps
+  ensure_dirs
+  clone_or_update "$NODE_REPO" "$SRC_NODE"
+  (
+    cd "$SRC_NODE"
+    ulimit -n 1048576 || true
+    cargo build --release
+  )
+  cp "$SRC_NODE/target/release/keryxd" "$BIN/keryxd"
+  chmod +x "$BIN/keryxd"
+  set +e
+}
+
 install_miner() {
   set -e
   require_root
@@ -117,6 +133,24 @@ install_miner() {
   chmod +x "$BIN/keryx-miner"
   echo
   echo "Miner installed."
+  set +e
+}
+
+build_miner_only() {
+  set -e
+  require_root
+  install_deps
+  ensure_dirs
+  clone_or_update "$MINER_REPO" "$SRC_MINER"
+  (
+    cd "$SRC_MINER"
+    ulimit -n 1048576 || true
+    cargo build --release
+  )
+  cp "$SRC_MINER/target/release/keryx-miner" "$BIN/keryx-miner"
+  [ -f "$SRC_MINER/target/release/libkeryxcuda.so" ] && cp "$SRC_MINER/target/release/libkeryxcuda.so" "$BIN/"
+  [ -f "$SRC_MINER/target/release/libkeryxopencl.so" ] && cp "$SRC_MINER/target/release/libkeryxopencl.so" "$BIN/"
+  chmod +x "$BIN/keryx-miner"
   set +e
 }
 
@@ -167,6 +201,35 @@ start_node_and_miner() {
 
   start_node
   start_miner
+}
+
+stop_node_and_miner() {
+  require_root
+  tmux kill-session -t keryx-miner 2>/dev/null || true
+  tmux kill-session -t keryx-node 2>/dev/null || true
+  sleep 2
+  pkill -x keryx-miner 2>/dev/null || true
+  pkill -x keryxd 2>/dev/null || true
+}
+
+update_node_and_miner() {
+  set -e
+  require_root
+  ensure_dirs
+
+  echo
+  echo "Updating Keryx node and miner."
+  echo "Node data directory will be kept unchanged: $NODE_APPDIR"
+  echo
+
+  stop_node_and_miner
+  build_node_only
+  build_miner_only
+  start_node_and_miner
+
+  echo
+  echo "Update complete. Existing node sync data was not deleted."
+  set +e
 }
 
 show_logs() {
@@ -248,20 +311,22 @@ main_menu() {
 Keryx menu
 1. Install node
 2. Install miner
-3. Start node and miner
-4. Show logs
-5. Status
-6. Exit
+3. Update node and miner
+4. Start node and miner
+5. Show logs
+6. Status
+7. Exit
 MENU
     printf "Choose: "
     read -r choice
     case "$choice" in
       1) install_node ;;
       2) install_miner ;;
-      3) start_node_and_miner ;;
-      4) show_logs ;;
-      5) show_status ;;
-      6) exit 0 ;;
+      3) update_node_and_miner ;;
+      4) start_node_and_miner ;;
+      5) show_logs ;;
+      6) show_status ;;
+      7) exit 0 ;;
       *) echo "Unknown choice." ;;
     esac
   done
