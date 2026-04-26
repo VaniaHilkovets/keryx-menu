@@ -185,6 +185,14 @@ start_miner() {
   echo "Miner started. Attach with: tmux attach -t keryx-miner"
 }
 
+start_node_and_miner() {
+  require_root
+  ensure_dirs
+
+  start_node
+  start_miner
+}
+
 show_logs() {
   require_root
   ensure_dirs
@@ -264,24 +272,22 @@ main_menu() {
 Keryx menu
 1. Install node
 2. Install miner
-3. Start node
-4. Start miner
-5. Show logs
-6. Status
-7. Set wallet
-8. Exit
+3. Start node and miner
+4. Show logs
+5. Status
+6. Set wallet
+7. Exit
 MENU
     printf "Choose: "
     read -r choice
     case "$choice" in
       1) install_node ;;
       2) install_miner ;;
-      3) start_node ;;
-      4) start_miner ;;
-      5) show_logs ;;
-      6) show_status ;;
-      7) change_wallet ;;
-      8) exit 0 ;;
+      3) start_node_and_miner ;;
+      4) show_logs ;;
+      5) show_status ;;
+      6) change_wallet ;;
+      7) exit 0 ;;
       *) echo "Unknown choice." ;;
     esac
   done
